@@ -31,24 +31,31 @@ jobs:
     # Configure Gradle for optimal use in GiHub Actions, including caching of downloaded dependencies.
     # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
     - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@v3.3.1 # Update to the latest version available
-      with:
-        gradle-version: '7.3' # Update to a version that matches your project's requirements
+      uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
 
-    - name: Grant permission to build Gradle script
+    - name: Grant permission to bild gradle script
       run: chmod +x ./gradlew
-
-    - name: Clean Gradle cache
-      run: rm -rf $HOME/.gradle/caches/
 
     - name: Build with Gradle Wrapper
       run: ./gradlew build
 
     - name: Build & push Docker image
       uses: mr-smithers-excellent/docker-build-push@v6
+    
       with:
         image: mahitha11/githubactionrepo
         tags: v1, latest
         registry: docker.io
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
+
+    # NOTE: The Gradle Wrapper is the default and recommended way to run Gradle (https://docs.gradle.org/current/userguide/gradle_wrapper.html).
+    # If your project does not have the Gradle Wrapper configured, you can use the following configuration to run Gradle with a specified version.
+    #
+    # - name: Setup Gradle
+    #   uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
+    #   with:
+    #     gradle-version: '8.5'
+    #
+    # - name: Build with Gradle 8.5
+    #   run: gradle build
